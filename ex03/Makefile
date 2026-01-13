@@ -1,7 +1,7 @@
 NAME = ex03
 
 CXX = c++
-CXXFLAGS = -Wall -Wextra -Werror -Iinc -std=c++98
+CXXFLAGS = -Wall -Wextra -Werror -pedantic -Iinc -std=c++98
 
 SRCS = src/Weapon.cpp \
        src/HumanA.cpp \
