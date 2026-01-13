@@ -1,40 +1,38 @@
 NAME = ex03
 
 CXX = c++
-CXXFLAGS = -Wall -Wextra -Werror -pedantic -Iinc -std=c++98
+CXXFLAGS = -Wall -Wextra -Werror -pedantic -std=c++98 -Iinc
 
-SRCS = src/Weapon.cpp \
-       src/HumanA.cpp \
-       src/HumanB.cpp \
-       src/main.cpp
-
+SRC_DIR = src
 OBJ_DIR = obj
-OBJS = $(SRCS:src/%.cpp=$(OBJ_DIR)/src/%.o)
+INC_DIR = inc
 
-# Default rule
-all: $(OBJS) $(NAME)
+SRC_FILES = HumanA.cpp\
+			HumanB.cpp\
+			main.cpp\
+			Weapon.cpp
 
-# Create obj/src/ directory if it doesn't exist
-$(OBJ_DIR)/src:
-	mkdir -p $(OBJ_DIR)/src
+OBJ_FILES = $(SRC_FILES:%.cpp=$(OBJ_DIR)/%.o)
+
+all: $(NAME)
 
 # Link object files
-$(NAME): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $(NAME) $(OBJS)
+$(NAME): $(OBJ_FILES)
+	$(CXX) $(CXXFLAGS) -o $@ $^
 
-# Compile .cpp to .o inside obj/src/
-$(OBJ_DIR)/src/%.o: src/%.cpp | $(OBJ_DIR)/src
+# Compile .cpp to .o inside obj/
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# Clean object files
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
+
 clean:
 	rm -rf $(OBJ_DIR)
 
-# Clean object files and executable
 fclean: clean
 	rm -f $(NAME)
 
-# Rebuild everything
 re: fclean all
 
 .PHONY: all clean fclean re
