@@ -1,38 +1,37 @@
-CXX = c++
-CXXFLAGS = -Wall -Wextra -Werror -pedantic -std=c++98
-
 NAME = ex01
 
-SRCS = main.cpp \
-	   Zombie.cpp \
-	   zombieHorde.cpp
+CXX = c++
+CXXFLAGS = -Wall -Wextra -Werror -pedantic -std=c++98 -Iinc
+
+SRC_DIR = src
 OBJ_DIR = obj
-OBJS = $(SRCS:%.cpp=$(OBJ_DIR)/%.o)
+INC_DIR = inc
 
-# Default rule
-all: $(OBJ_DIR) $(NAME)
+SRC_FILES = main.cpp \
+            Zombie.cpp \
+            zombieHorde.cpp
 
-# Create obj/ directory if it doesn't exist
+OBJ_FILES = $(SRC_FILES:%.cpp=$(OBJ_DIR)/%.o)
+
+all: $(NAME)
+
+# Link object files
+$(NAME): $(OBJ_FILES)
+	$(CXX) $(CXXFLAGS) -o $@ $^
+
+# Compile .cpp to .o inside obj/
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
 
-# Link object files
-$(NAME): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $(NAME) $(OBJS)
-
-# Compile .cpp to .o inside obj/
-$(OBJ_DIR)/%.o: %.cpp Zombie.hpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-# Clean object files
 clean:
 	rm -rf $(OBJ_DIR)
 
-# Clean object files and executable
 fclean: clean
 	rm -f $(NAME)
 
-# Rebuild everything
 re: fclean all
 
 .PHONY: all clean fclean re
