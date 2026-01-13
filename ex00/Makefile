@@ -1,28 +1,32 @@
 NAME = ex00
 
 CXX = c++
-CXXFLAGS = -Wall -Wextra -Werror -pedantic -std=c++98
+CXXFLAGS = -Wall -Wextra -Werror -pedantic -std=c++98 -Iinc
 
-SRCS = \
-	main.cpp \
-	Zombie.cpp \
-	newZombie.cpp \
-	randomChump.cpp
+SRC_DIR = src
+OBJ_DIR = obj
+INC_DIR = inc
 
-OBJDIR = obj
-OBJS = $(SRCS:%.cpp=$(OBJDIR)/%.o)
+SRC_FILES = main.cpp \
+			Zombie.cpp \
+			newZombie.cpp \
+			randomChump.cpp
+
+OBJ_FILES = $(SRC_FILES:%.cpp=$(OBJ_DIR)/%.o)
 
 all: $(NAME)
 
-$(NAME): $(OBJS)
-	$(CXX) $(CXXFLAGS) $(OBJS) -o $(NAME)
+$(NAME): $(OBJ_FILES)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ $^
 
-$(OBJDIR)/%.o: %.cpp Zombie.hpp
-	@mkdir -p $(OBJDIR)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
+
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
 
 clean:
-	rm -rf $(OBJDIR)
+	rm -rf $(OBJ_DIR)
 
 fclean: clean
 	rm -f $(NAME)
